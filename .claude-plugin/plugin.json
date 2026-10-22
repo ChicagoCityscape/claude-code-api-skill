@@ -1,19 +1,19 @@
 {
-  "name": "chicago-cityscape",
-  "displayName": "Chicago Cityscape",
-  "version": "1.1.0",
-  "description": "Look up Chicago-area Property Reports (zoning, taxes, permits, sales, ownership, incentives) through the Chicago Cityscape connector, and query its property, zoning, parcel, permit, and place APIs for real estate research.",
+  "name": "chicago-cityscape-api",
+  "displayName": "Chicago Cityscape API",
+  "version": "1.0.0",
+  "description": "Teach Claude Code to query Chicago Cityscape's property, zoning, parcel, permit, and place APIs with your API key, for Chicago and Cook County real estate research.",
   "author": {
     "name": "Chicago Cityscape",
     "url": "https://www.chicagocityscape.com"
   },
   "homepage": "https://www.chicagocityscape.com",
-  "repository": "https://github.com/ChicagoCityscape/claude-code-skills",
+  "repository": "https://github.com/ChicagoCityscape/claude-code-api-skill",
   "license": "MIT",
   "icon": "./.claude-plugin/icon.png",
-  "documentationUrl": "https://github.com/ChicagoCityscape/claude-code-skills#readme",
+  "documentationUrl": "https://github.com/ChicagoCityscape/claude-code-api-skill#readme",
   "privacyPolicyUrl": "https://help.chicagocityscape.com/privacypolicy",
   "termsOfServiceUrl": "https://help.chicagocityscape.com/usageguidelines",
   "supportUrl": "https://www.chicagocityscape.com/contact.php",
-  "keywords": ["chicago", "real-estate", "zoning", "property", "gis", "permits", "cook-county", "mcp"]
+  "keywords": ["chicago", "real-estate", "zoning", "property", "gis", "permits", "cook-county", "api"]
 }
