@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "chicago-cityscape": {
+      "type": "http",
+      "url": "https://www.chicagocityscape.com/mcp"
+    }
+  }
+}

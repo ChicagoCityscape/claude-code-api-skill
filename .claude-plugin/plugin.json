@@ -1,8 +1,8 @@
 {
   "name": "chicago-cityscape",
   "displayName": "Chicago Cityscape",
-  "version": "1.0.0",
-  "description": "Query Chicago Cityscape's property, zoning, parcel, permit, and place APIs for Chicago and Cook County real estate research.",
+  "version": "1.1.0",
+  "description": "Look up Chicago-area Property Reports (zoning, taxes, permits, sales, ownership, incentives) through the Chicago Cityscape connector, and query its property, zoning, parcel, permit, and place APIs for real estate research.",
   "author": {
     "name": "Chicago Cityscape",
     "url": "https://www.chicagocityscape.com"
@@ -15,5 +15,5 @@
   "privacyPolicyUrl": "https://help.chicagocityscape.com/privacypolicy",
   "termsOfServiceUrl": "https://help.chicagocityscape.com/usageguidelines",
   "supportUrl": "https://www.chicagocityscape.com/contact.php",
-  "keywords": ["chicago", "real-estate", "zoning", "property", "gis", "permits", "cook-county"]
+  "keywords": ["chicago", "real-estate", "zoning", "property", "gis", "permits", "cook-county", "mcp"]
 }

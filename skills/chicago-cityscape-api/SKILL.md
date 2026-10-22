@@ -9,8 +9,9 @@ description: >
   Dictionary API, and Pending Permits API. NOTE:
   actually fetching these endpoints requires an environment with unrestricted
   network egress (Claude Code, a local terminal, a server, or the API/SDK). The
-  claude.ai web/desktop app CANNOT reach the API from its sandbox — there, use
-  the skill only as reference and run the request locally.
+  claude.ai web/desktop app CANNOT reach the API from its sandbox — there, look
+  up properties with the Chicago Cityscape connector's tools instead (this
+  plugin adds it), and use this skill only as API reference.
 ---
 
 > **How Claude should fetch these APIs — read this first.** The user's Chicago
@@ -43,8 +44,22 @@ description: >
 >   proxy. Do not keep retrying or ask the user to "authorize" it — instead, take
 >   the fallback below.
 >
-> **Fallback when running inside a Claude app:** ask the user to run the request
-> in an environment with real internet access — Claude Code locally, or a plain
+> **Inside a Claude app, use the Chicago Cityscape connector first.** This
+> plugin also adds the Chicago Cityscape connector, a remote MCP server at
+> `https://www.chicagocityscape.com/mcp`. It runs on Chicago Cityscape's side, so
+> the sandbox doesn't block it, and it works in claude.ai, the desktop app,
+> Cowork and Claude Code. The user signs in once with their Chicago Cityscape
+> account (no API key needed). Its tools: `get_property_report` (one property by
+> address or PIN, with `details` for incentives, allowed uses, a map, a permit,
+> appeals or exemptions), `get_property_reports` (up to 5), `compare_properties`
+> (up to 30, location, lot size and zoning), `list_my_properties` (My Faves and
+> My Notes) and `add_to_my_faves`. It covers 13 counties in Illinois, Indiana
+> and Wisconsin, not only Cook. If its tools aren't available, ask the user to
+> connect it (in Claude: Settings, then Connectors).
+>
+> **Fallback for what the connector doesn't cover** (the place, parcel, query,
+> search and other APIs below): ask the user to run the request in an
+> environment with real internet access — Claude Code locally, or a plain
 > terminal — and paste the JSON back into the chat for you to analyze. Do not
 > silently substitute other data sources without telling the user the API was
 > unreachable.
