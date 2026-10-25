@@ -6,7 +6,7 @@ Looking things up in claude.ai, the desktop app or Cowork? Use the **Chicago Cit
 
 ## What's included
 
-### Skill: chicago-cityscape-api
+### Skill: [chicago-cityscape-api](skills/chicago-cityscape-api/SKILL.md)
 
 Documents all ten public Chicago Cityscape API endpoints: Property Report, Zoning, Parcels, Places, Sources, Query, Zoning Explorer, Search, Incentives Dictionary, and Pending Permits. Before calling anything, Claude asks a few short questions about what you are researching, then picks the right endpoint.
 
