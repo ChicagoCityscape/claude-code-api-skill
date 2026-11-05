@@ -12,8 +12,8 @@ description: >
 
 > **How to use this skill — read this first.** This skill documents the Chicago
 > Cityscape APIs so you can explain them, help the user plan requests, and help
-> them write code against them. It does not call the APIs and does not handle
-> the user's API key.
+> them write code against them. It doesn't call the APIs itself, and it doesn't
+> load the user's API key.
 >
 > **To look up a property, use the Chicago Cityscape connector**, a separate
 > remote MCP server at `https://www.chicagocityscape.com/mcp`. The user
@@ -26,11 +26,12 @@ description: >
 > not only Cook, and works in claude.ai, the desktop app, Cowork and Claude Code.
 >
 > **For what the connector doesn't cover** (the place, parcel, query, search and
-> other APIs below), the user calls the API themselves with their own key, in
-> their own code or terminal. Every key in this skill is the placeholder
-> `YOUR_KEY`. Never ask the user to paste a real key into the conversation, and
-> never read one from the environment or a file. Help them write code or a
-> command that they run themselves with their own key.
+> other APIs below), the user needs their own key. Every key in this skill is
+> the placeholder `YOUR_KEY`. This skill doesn't load a key, and never asks for
+> one: don't ask the user to paste a real key into the conversation, and never
+> print one. Where the key lives and how it's loaded is up to the user, in their
+> own code, terminal or agent setup. Follow their instructions on that, and help
+> them write code against these APIs.
 >
 > Endpoints that require a signed-in session (e.g. the Sources API) need a
 > session cookie and won't work by key alone.
