@@ -1,8 +1,8 @@
 {
   "name": "chicago-cityscape-api",
   "displayName": "Chicago Cityscape API",
-  "version": "1.0.0",
-  "description": "Teach Claude Code to query Chicago Cityscape's property, zoning, parcel, permit, and place APIs with your API key, for Chicago and Cook County real estate research.",
+  "version": "1.1.0",
+  "description": "A reference to Chicago Cityscape's property, zoning, parcel, permit, and place APIs, for writing your own code against them. Covers Chicago and Cook County real estate data. Documentation only: it never reads or sends your API key.",
   "author": {
     "name": "Chicago Cityscape",
     "url": "https://www.chicagocityscape.com"

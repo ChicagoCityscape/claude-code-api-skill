@@ -1,72 +1,39 @@
 ---
 name: chicago-cityscape-api
 description: >
-  Describes how to interact with the Chicago Cityscape API. Use when the user
-  asks about API access, API keys, API endpoints, how to query property data
-  programmatically, or how to integrate Chicago Cityscape data into their own
-  application. Covers the Property Report API, Zoning API, Parcels API, Places
-  API, Sources API, Query API, Zoning Explorer API, Search API, Incentives
-  Dictionary API, and Pending Permits API. NOTE:
-  actually fetching these endpoints requires an environment with unrestricted
-  network egress (Claude Code, a local terminal, a server, or the API/SDK). The
-  claude.ai web/desktop app CANNOT reach the API from its sandbox — there, look
-  up properties with the Chicago Cityscape connector's tools instead (from the
-  Chicago Cityscape plugin), and use this skill only as API reference.
+  Reference for the Chicago Cityscape APIs. Use when the user asks about API
+  access, API endpoints, what parameters or fields an endpoint has, or how to
+  integrate Chicago Cityscape data into their own application. Covers the
+  Property Report API, Zoning API, Parcels API, Places API, Sources API, Query
+  API, Zoning Explorer API, Search API, Incentives Dictionary API, and Pending
+  Permits API. This skill is documentation only: to look up a property, use the
+  Chicago Cityscape connector's tools, if the user has connected it.
 ---
 
-> **How Claude should fetch these APIs — read this first.** The user's Chicago
-> Cityscape API key is issued by chicagocityscape.com and is sent only to
-> chicagocityscape.com, as the `?key=` parameter (or a Bearer header for the
-> Search API) that the API documents. Get the key from the shell environment or
-> the Keychain — never ask the user to paste it into the conversation. See
-> "Handling the key securely" below.
+> **How to use this skill — read this first.** This skill documents the Chicago
+> Cityscape APIs so you can explain them, help the user plan requests, and help
+> them write code against them. It does not call the APIs and does not handle
+> the user's API key.
 >
-> **Which environment are you in? It decides whether you can reach the API at
-> all.**
+> **To look up a property, use the Chicago Cityscape connector**, a separate
+> remote MCP server at `https://www.chicagocityscape.com/mcp`. The user
+> signs in once with their Chicago Cityscape account (no API key needed). Its
+> tools: `get_property_report` (one property by address or PIN, with `details`
+> for incentives, allowed uses, a map, a permit, appeals or exemptions),
+> `get_property_reports` (up to 5), `compare_properties` (up to 30, location,
+> lot size and zoning), `list_my_properties` (My Faves and My Notes) and
+> `add_to_my_faves`. It covers 13 counties in Illinois, Indiana and Wisconsin,
+> not only Cook, and works in claude.ai, the desktop app, Cowork and Claude Code.
 >
-> - **Claude Code (local CLI) or any real local shell — WORKS.** Use `curl` via
->   Bash (preferred: it returns the exact, unmodified JSON bytes). `WebFetch` also
->   works here, but it converts the response to markdown and summarizes it through
->   a small model, so prefer `curl` when you need precise data. The `curl`
->   examples below are written for this environment.
+> **For what the connector doesn't cover** (the place, parcel, query, search and
+> other APIs below), the user calls the API themselves with their own key, in
+> their own code or terminal. Every key in this skill is the placeholder
+> `YOUR_KEY`. Never ask the user to paste a real key into the conversation, and
+> never read one from the environment or a file. Help them write code or a
+> command that they run themselves with their own key.
 >
-> - **The Claude apps (claude.ai web / desktop) — usually CANNOT reach the API,
->   by any method.** The app runs the model's tools behind a default-deny network
->   egress proxy that only permits a small allowlist of domains.
->   `chicagocityscape.com` is not on it (nor is most of the internet — e.g. even
->   `raw.githubusercontent.com` is blocked), so the outbound request is dropped at
->   the proxy *before it leaves Anthropic's infrastructure*. This is a platform
->   safety restriction (anti-exfiltration / anti-SSRF); it is **not** a
->   permissions prompt the user can approve, and it is unrelated to the site,
->   the API key, or the site's Cloudflare user-agent allowlist (that only matters
->   once a request actually reaches the site, which never happens here). `curl`
->   and `WebFetch` both fail the same way, because both route through the same
->   proxy. Do not keep retrying or ask the user to "authorize" it — instead, take
->   the fallback below.
->
-> **Inside a Claude app, use the Chicago Cityscape connector first.** The
-> separate Chicago Cityscape plugin adds the Chicago Cityscape connector, a remote
-> MCP server at `https://www.chicagocityscape.com/mcp`. It runs on Chicago Cityscape's side, so
-> the sandbox doesn't block it, and it works in claude.ai, the desktop app,
-> Cowork and Claude Code. The user signs in once with their Chicago Cityscape
-> account (no API key needed). Its tools: `get_property_report` (one property by
-> address or PIN, with `details` for incentives, allowed uses, a map, a permit,
-> appeals or exemptions), `get_property_reports` (up to 5), `compare_properties`
-> (up to 30, location, lot size and zoning), `list_my_properties` (My Faves and
-> My Notes) and `add_to_my_faves`. It covers 13 counties in Illinois, Indiana
-> and Wisconsin, not only Cook. If its tools aren't available, ask the user to
-> add the Chicago Cityscape plugin from the directory, or the connector in
-> Settings, then Connectors.
->
-> **Fallback for what the connector doesn't cover** (the place, parcel, query,
-> search and other APIs below): ask the user to run the request in an
-> environment with real internet access — Claude Code locally, or a plain
-> terminal — and paste the JSON back into the chat for you to analyze. Do not
-> silently substitute other data sources without telling the user the API was
-> unreachable.
->
-> Separately, endpoints that require a signed-in session (e.g. the Sources API)
-> need a session cookie and won't work by key alone.
+> Endpoints that require a signed-in session (e.g. the Sources API) need a
+> session cookie and won't work by key alone.
 
 # Chicago Cityscape API Guide
 
@@ -103,9 +70,8 @@ focused round of questions, then confirm your plan before making calls.
    need pagination.)
 4. **What output do you need?** Raw JSON/GeoJSON saved to a file, a cleaned-up
    table or CSV, a short written summary, a map, or input to further analysis?
-5. **Is your API key available to the shell?** Most endpoints require one. Do
-   NOT ask the user to paste it into the chat — see "Handling the key securely"
-   below for how to pick it up from the environment or the Keychain instead.
+5. **Will you call the API yourself?** Most endpoints need a Real Estate Pro
+   API key. For one property, the connector's tools are simpler and need no key.
 
 Then map the answers to endpoints:
 
@@ -122,9 +88,9 @@ Then map the answers to endpoints:
 | Definitions of the incentive programs | Incentives Dictionary API (`/api/incentives.php`) |
 | Permit applications filed but not yet issued | Pending Permits API (`/api/pendingpermits.php`) |
 
-State the endpoint(s) and parameters you intend to call and confirm with the user
-before running anything. For bulk pulls, confirm the expected result size and the
-pagination/limit plan so you do not accidentally issue hundreds of calls.
+Tell the user which endpoint(s) and parameters fit their question. For bulk
+pulls, help them plan the expected result size and the pagination/limit so their
+code does not issue hundreds of calls.
 
 ---
 
@@ -210,119 +176,8 @@ Requests without a valid key return:
 { "error": ["Key not provided"] }
 ```
 
-Every `YOUR_KEY` in the examples below is a placeholder. Do not ask the user to
-paste the real key in its place — read the next section first and substitute a
-shell reference such as `"$CITYSCAPE_API_KEY"` instead.
-
----
-
-## Handling the key securely (read this before asking for a key)
-
-**Rule for the agent: never ask the user to type or paste their API key into the
-conversation, and never print it.** A key pasted into chat is in the transcript
-for good; it can be scrolled back to, exported, or included in a bug report. It
-is also completely unnecessary — the shell you run commands in can read the key
-itself, so you can make authenticated calls without the key ever entering your
-context.
-
-### What to do, in order
-
-1. **Check whether the key is already in the environment.** Run a test that
-   reveals only presence, never the value:
-
-   ```bash
-   [ -n "$CITYSCAPE_API_KEY" ] && echo "key is set" || echo "key is NOT set"
-   ```
-
-   If it is set, just use `"$CITYSCAPE_API_KEY"` in your requests and move on.
-
-2. **If it is not set, ask the user to provide it out-of-band** — that is,
-   through the shell or a file rather than through the chat. Any of these works;
-   pick the one that fits the user's setup:
-
-   **a. An exported shell variable** (macOS, Linux, WSL). The user adds this line
-   to `~/.zshrc` (or `~/.bashrc`) *in an editor* — not with `echo >>`, which would
-   put the key in their shell history — and opens a new terminal before starting
-   the agent:
-
-   ```bash
-   export CITYSCAPE_API_KEY="their-key-here"
-   ```
-
-   Claude Code starts its shell from the user's profile, so the variable is
-   available to every Bash call without you ever seeing the value:
-
-   ```bash
-   curl -sG "https://chicagocityscape.com/api/index.php" \
-     --data-urlencode "pin=17104000210000" \
-     --data-urlencode "key=$CITYSCAPE_API_KEY"
-   ```
-
-   **b. A `.env` file the agent is forbidden to read.** Put the key in `.env`,
-   add `.env` to `.gitignore`, and add a deny rule in `.claude/settings.json` so
-   the file cannot be opened even by accident:
-
-   ```json
-   {
-     "permissions": {
-       "deny": ["Read(./.env)", "Bash(cat .env:*)"]
-     }
-   }
-   ```
-
-   Then load it into the environment inside the same command that uses it:
-
-   ```bash
-   set -a; . ./.env; set +a
-   curl -sG "https://chicagocityscape.com/api/index.php" \
-     --data-urlencode "pin=17104000210000" \
-     --data-urlencode "key=$CITYSCAPE_API_KEY"
-   ```
-
-   **c. The macOS Keychain**, if the user is on a Mac — the key is then never
-   written to a file at all. (Linux users can do the same with `secret-tool`.)
-   The user runs this once, in their own terminal, and pastes the key at the
-   prompt (`-w` must be the last flag for it to prompt; the key does not echo and
-   does not land in shell history):
-
-   ```bash
-   security add-generic-password -a "$USER" -s cityscape-api -w
-   ```
-
-   You then read it inline, per call:
-
-   ```bash
-   curl -sG "https://chicagocityscape.com/api/index.php" \
-     --data-urlencode "pin=17104000210000" \
-     --data-urlencode "key=$(security find-generic-password -s cityscape-api -w)"
-   ```
-
-   macOS may show a one-time "allow access" dialog the first time an item is
-   read; the user clicks Always Allow and it does not ask again.
-
-3. **Keep it out of your output for the rest of the session:**
-   - Never run `echo "$CITYSCAPE_API_KEY"`, `env`, `printenv`, or `set` in a way
-     that prints the value, and never `cat` the `.env` file.
-   - Never use `curl -v` / `--trace` on an authenticated call: verbose mode
-     prints the full request line, key included.
-   - When a call fails, report the HTTP status and the response body, not the
-     command's expanded URL.
-   - Do not write the key into a script, a notebook, a commit, or a saved file
-     the user did not ask for.
-
-4. **If the user pastes the key into the chat anyway,** say so plainly and tell
-   them to rotate it at `https://chicagocityscape.com/account.php?page=apikeys`
-   (the "Rotate API key" button invalidates the old key immediately). Then set up
-   one of the methods above for the new key.
-
-### Two notes on where keys leak
-
-- **`?key=` lands in server access logs.** For the Search API, prefer the header
-  form — `-H "Authorization: Bearer $CITYSCAPE_API_KEY"` — which keeps the key out
-  of the URL. Other endpoints accept the query parameter only.
-- **An expanded command line is visible to other local processes** (`ps`). That
-  matters only on a shared machine; where it does, a secret store (2c) keeps the
-  value out of the command entirely.
+Every `YOUR_KEY` in the examples below is a placeholder for the user's own key.
+Do not ask the user to paste the real key into the conversation.
 
 ---
 
@@ -1095,7 +950,7 @@ not an official City feed, so treat counts as close but not authoritative.
 Call this before writing any query:
 
 ```bash
-curl -H "Authorization: Bearer $CITYSCAPE_API_KEY" \
+curl -H "Authorization: Bearer YOUR_KEY" \
   "https://www.chicagocityscape.com/api/pendingpermits.php?method=catalog"
 ```
 
@@ -1154,11 +1009,11 @@ be inside anything. Booleans accept `true`/`false`, `1`/`0`, `yes`/`no`, or `y`/
 
 ```bash
 # What new construction is pending in Ward 1?
-curl -H "Authorization: Bearer $CITYSCAPE_API_KEY" \
+curl -H "Authorization: Bearer YOUR_KEY" \
   "https://www.chicagocityscape.com/api/pendingpermits.php?permit_type=New%20Construction&slug=ward-1"
 
 # Newly filed applications since a date, for a watchlist that re-runs
-curl -H "Authorization: Bearer $CITYSCAPE_API_KEY" \
+curl -H "Authorization: Bearer YOUR_KEY" \
   "https://www.chicagocityscape.com/api/pendingpermits.php?first_seen_since=2026-09-01&include_total=true"
 ```
 
